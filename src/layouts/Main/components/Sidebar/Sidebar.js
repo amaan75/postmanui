@@ -16,7 +16,7 @@ import { Profile, SidebarNav, UpgradePlan } from './components';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
-    width: 240,
+    width: 350,
     [theme.breakpoints.up('lg')]: {
       marginTop: 64,
       height: 'calc(100% - 64px)'
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   divider: {
     margin: theme.spacing(2, 0)
@@ -48,41 +48,6 @@ const Sidebar = props => {
       href: '/dashboard',
       icon: <DashboardIcon />
     },
-    {
-      title: 'Users',
-      href: '/users',
-      icon: <PeopleIcon />
-    },
-    {
-      title: 'Products',
-      href: '/products',
-      icon: <ShoppingBasketIcon />
-    },
-    {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />
-    },
-    {
-      title: 'Typography',
-      href: '/typography',
-      icon: <TextFieldsIcon />
-    },
-    {
-      title: 'Icons',
-      href: '/icons',
-      icon: <ImageIcon />
-    },
-    {
-      title: 'Account',
-      href: '/account',
-      icon: <AccountBoxIcon />
-    },
-    {
-      title: 'Settings',
-      href: '/settings',
-      icon: <SettingsIcon />
-    }
   ];
 
   return (
@@ -103,7 +68,6 @@ const Sidebar = props => {
           className={classes.nav}
           pages={pages}
         />
-        <UpgradePlan />
       </div>
     </Drawer>
   );

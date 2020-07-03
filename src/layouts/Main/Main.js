@@ -18,30 +18,30 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 240
   },
   content: {
-    height: '100%'
+    height: '100%',
+    marginLeft: '20%'
   }
 }));
 
 const Main = props => {
-  const { children } = props;
-
-  const classes = useStyles();
-  const theme = useTheme();
+  const { children } = props
+  const classes = useStyles()
+  const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true
-  });
+  })
 
   const [openSidebar, setOpenSidebar] = useState(false);
 
   const handleSidebarOpen = () => {
-    setOpenSidebar(true);
+    setOpenSidebar(true)
   };
 
   const handleSidebarClose = () => {
-    setOpenSidebar(false);
+    setOpenSidebar(false)
   };
 
-  const shouldOpenSidebar = isDesktop ? true : openSidebar;
+  const shouldOpenSidebar = isDesktop ? true : openSidebar
 
   return (
     <div

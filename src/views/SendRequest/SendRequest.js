@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import validate from 'validate.js'
-import { 
+import {
   Grid,
   Typography,
   TextField,
@@ -9,12 +9,15 @@ import {
   Button,
   FormHelperText,
   Link,
-  TextareaAutosize
+  TextareaAutosize,
+  FormControl
 } from '@material-ui/core'
-import {history} from "../../history"
-import { connect } from "react-redux"
-import { Link as RouterLink, withRouter } from 'react-router-dom'
+import { history } from "../../history"
 import ReactJson from 'react-json-view'
+import { HeadersTableView } from "./HeadersTableView"
+import { BodyView } from './BodyView'
+import Axios from 'axios'
+import { ApiView } from './ApiView'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -108,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   policyCheckbox: {
     marginLeft: '-14px'
   },
-  signUpButton: {
+  sendReqeustButton: {
     margin: theme.spacing(2, 0)
   }
 }))
@@ -134,13 +137,11 @@ const schema = {
   },
 }
 const SendRequest = (props) => {
-  const { defaultRequest } = props
+  const { selectedRequest } = props.appState;
+  const isLocal = false;
+
   const classes = useStyles()
-  const jsonData = {
-    "field1": "field1data",
-    "field2": ["1é", "2"],
-    "field3": { "string1": "string1", "string2": "string2" }
-  }
+
   const [request, setRequest] = useState(null)
   const [formState, setFormState] = useState({
     isValid: false,
@@ -149,19 +150,21 @@ const SendRequest = (props) => {
     errors: {}
   })
 
+  const [response, setResponse] = useState({});
+
   useEffect(() => {
-    if(defaultRequest) {
-      console.log(defaultRequest)
-      setRequest(defaultRequest)
+    if (selectedRequest) {
+      console.log(selectedRequest)
+      setRequest(selectedRequest)
       setFormState(prev => ({
         ...prev,
         values: {
           ...prev.values,
-          url: defaultRequest.url
+          url: selectedRequest.url
         }
       }))
     }
-  }, [defaultRequest])
+  }, [selectedRequest])
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
@@ -192,99 +195,100 @@ const SendRequest = (props) => {
     }))
   }
 
+
+
   const handleBack = () => {
     history.goBack()
   }
 
-  const handleSignUp = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    history.push('/')
+    if (isLocal) {
+      //todo:
+      const response = Axios[selectedRequest.method.toLowerCase()](selectedRequest.url);
+      response.then(response => { console.log(response); }).catch(err => console.err(err));
+    } else {
+      const requestEntity = createRequest(selectedRequest);
+      const response = Axios.post("http://localhost:8080/make/request", requestEntity);
+      response.then(response => { setResponse(response.data) }).catch(err => console.log(err))
+    }
+  }
+
+  const createRequest = (request) => {
+    return {
+      url: request.url,
+      method: request.method,
+      body: request.body || {},
+      headers: [{
+        key: "content-type",
+        values: ["application/json"]
+      }]
+    }
   }
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false
   return (
     <div className={classes.root}>
-      {/* <ReactJson src={jsonData} />
-      <ReactJson onEdit={edit => console.log(edit)} /> */}
-      {request !== null ? <form
-        className={classes.form}
-        onSubmit={handleSignUp}
-      >
+      {request !== null ?
+        <form
+          className={classes.form}
+          onSubmit={handleSubmit}
+        >
+          <Typography
+            className={classes.title}
+            variant="h2"
+          >
+            Send your request
+        </Typography>
+          <TextField
+            disabled={true}
+            className={classes.textField}
+            error={hasError('url')}
+            fullWidth
+            helperText={
+              hasError('url') ? formState.errors.url[0] : null
+            }
+            label="Url"
+            name="url"
+            onChange={handleChange}
+            type="text"
+            value={formState.values.url || ''}
+            variant="outlined"
+          />
+
+
+          <ApiView jsonBody={selectedRequest} bodyViewTitle="Request Body" />
+
+          <Button
+            className={classes.sendReqeustButton}
+            color="primary"
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+          >
+            Send Request
+        </Button>
+
+          <ApiView isDisabled={false}
+            jsonBody={response.body}
+            headers={response.headers}
+            bodyViewTitle="Response Body" />
+        </form>
+        :
         <Typography
           className={classes.title}
           variant="h2"
         >
-          Send your request
-        </Typography>
-        <TextField
-          className={classes.textField}
-          error={hasError('url')}
-          fullWidth
-          helperText={
-            hasError('url') ? formState.errors.url[0] : null
-          }
-          label="Url"
-          name="url"
-          onChange={handleChange}
-          type="text"
-          value={formState.values.url || ''}
-          variant="outlined"
-        />
-        <TextField
-          className={classes.textField}
-          error={hasError('header')}
-          fullWidth
-          helperText={
-            hasError('header') ? formState.errors.header[0] : null
-          }
-          label="Headers"
-          name="header"
-          onChange={handleChange}
-          type="text"
-          value={formState.values.header || ''}
-          variant="outlined"
-        />
-        <TextField
-          className={classes.textField}
-          error={hasError('body')}
-          fullWidth
-          helperText={
-            hasError('body') ? formState.errors.body[0] : null
-          }
-          label="Body"
-          name="body"
-          onChange={handleChange}
-          type="text"
-          value={formState.values.body || ''}
-          variant="outlined"
-        />
-        <Button
-          className={classes.signUpButton}
-          color="primary"
-
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-        >
-          Send Request
-        </Button>
-      </form>
-      : 
-      <Typography
-        className={classes.title}
-        variant="h2"
-      >
-        No request selected
+          No request selected
       </Typography>
       }
     </div>
   )
 }
 
-const mapStateToProps = state => ({
-  defaultRequest: state.sideBar.defaultRequest,
-})
 
-export default connect(mapStateToProps, { })(SendRequest)
+
+export default SendRequest;
+

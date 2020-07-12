@@ -7,7 +7,9 @@ import store from './store'
 import { ThemeProvider } from '@material-ui/styles'
 import validate from 'validate.js'
 import { chartjs } from './helpers'
+import { INITIAL_STATE } from "./app_constants.js"
 import theme from './theme'
+import { StateManagementFunctionContext } from "./state_management_context"
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import './assets/scss/index.scss'
 import validators from './common/validators'
@@ -26,13 +28,36 @@ validate.validators = {
   ...validators
 };
 
+
+
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.setSelectedRequest = (requestId) => {
+      this.setState(prevState => {
+        const selectedRequestGroup = prevState.requestGroups || [];
+        const selectedRequests = selectedRequestGroup.flatMap(it => it.requests || []).filter(it => it.id === requestId) || [];
+        const selectedRequest = selectedRequests && selectedRequests.length ? selectedRequests[0] : {};
+        return { selectedRequest: selectedRequest };
+      });
+    }
+
+    this.state =
+    {
+      ...INITIAL_STATE,
+      setSelectedRequest: this.setSelectedRequest
+    }
+
+  }
+
   render() {
     return (
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <Router history={browserHistory}>
-            <Routes />
+            <StateManagementFunctionContext.Provider value={this.state}>
+              <Routes appState={this.state} />
+            </StateManagementFunctionContext.Provider>
           </Router>
         </ThemeProvider>
       </Provider>

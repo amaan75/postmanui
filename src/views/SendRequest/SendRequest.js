@@ -2,20 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import validate from 'validate.js'
 import {
-  Grid,
   Typography,
   TextField,
-  Checkbox,
   Button,
-  FormHelperText,
-  Link,
-  TextareaAutosize,
-  FormControl
 } from '@material-ui/core'
 import { history } from "../../history"
-import ReactJson from 'react-json-view'
-import { HeadersTableView } from "./HeadersTableView"
-import { BodyView } from './BodyView'
 import Axios from 'axios'
 import { ApiView } from './ApiView'
 

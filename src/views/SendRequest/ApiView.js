@@ -1,22 +1,10 @@
 import React, { useState } from 'react'
-import ReactJson from 'react-json-view'
 import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/styles'
-import { Container, colors, TextField, Tab, Tabs } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles'
+import { Tab, Tabs } from '@material-ui/core';
 import { BodyView } from './BodyView';
 import { TabPanel } from 'views/TabPanel';
 import { HeadersTableView } from './HeadersTableView';
-import { head } from 'underscore';
-const useStyles = makeStyles(theme => ({
-    root: {
-        marginTop: theme.spacing(2),
-        borderStyle: "solid",
-        borderWidth: "thin",
-        borderRadius: "4px",
-        borderColor: colors.grey[400],
-        minHeight: "200px"
-    }
-}));
 
 const StyledTabs = withStyles({
     indicator: {

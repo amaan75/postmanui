@@ -216,7 +216,11 @@ const SendRequest = (props) => {
       }]
     }
   }
-
+  const requestHeaders =
+    [{
+      key: "content-type",
+      values: ["application/json"]
+    }];
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false
   return (
@@ -233,7 +237,7 @@ const SendRequest = (props) => {
             Send your request
         </Typography>
           <TextField
-            disabled={true}
+            // disabled={true}
             className={classes.textField}
             error={hasError('url')}
             fullWidth
@@ -249,7 +253,7 @@ const SendRequest = (props) => {
           />
 
 
-          <ApiView jsonBody={selectedRequest} bodyViewTitle="Request Body" />
+          <ApiView jsonBody={selectedRequest.body} bodyViewTitle="Request Body" headers={requestHeaders} />
 
           <Button
             className={classes.sendReqeustButton}

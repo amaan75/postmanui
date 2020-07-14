@@ -33,10 +33,7 @@ const StyledTab = withStyles((theme) => ({
 }))((props) => <Tab disableRipple {...props} />);
 const ApiView = props => {
 
-    const { jsonBody: body = {}, isDisabled = false, bodyViewTitle, headers = [{
-        key: "content-type",
-        values: ["application/json"]
-    }] } = props;
+    const { jsonBody: body = {}, isDisabled = false, bodyViewTitle, headers = [] } = props;
 
     const [selectedTab, selectTab] = useState(0);
     const handleChange = (event, newValue) => {
@@ -49,7 +46,6 @@ const ApiView = props => {
                 <StyledTab label={bodyViewTitle} />
                 <StyledTab label="Headers" />
             </StyledTabs >
-
             <TabPanel value={selectedTab} index={0} render=
                 {() => <BodyView src={body} isDisabled={isDisabled} />} />
 

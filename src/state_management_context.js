@@ -1,6 +1,7 @@
 import React from 'react'
 export const StateManagementFunctionContext = React.createContext({
-  setSelectedRequest: () => { }
+  setSelectedRequest: () => { },
+  updateSelectedRequestBody: () => { },
 });
 
 

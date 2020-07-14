@@ -12,7 +12,12 @@ export const INITIAL_STATE = {
                     url: "http://localhost:8080/test/api",
                     token: "9U320H230FH23F23F08H",
                     type: "GET",
-                    description: "Add a book in the database"
+                    description: "Add a book in the database",
+                    body: {
+                        key1: "value1",
+                        key2: "value2",
+                        key3: "value3"
+                    }
                 },
                 {
                     method: "POST",

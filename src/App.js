@@ -41,11 +41,23 @@ export default class App extends Component {
         return { selectedRequest: selectedRequest };
       });
     }
+    this.updateSelectedRequestBody = (body) => {
+      this.setState(prevState => {
+        const selectedRequest = prevState.selectedRequest;
+        const updatedRequest = {
+          ...selectedRequest,
+          body: body
+
+        };
+        return { selectedRequest: updatedRequest };
+      });
+    }
 
     this.state =
     {
       ...INITIAL_STATE,
-      setSelectedRequest: this.setSelectedRequest
+      setSelectedRequest: this.setSelectedRequest,
+      updateSelectedRequestBody: this.updateSelectedRequestBody
     }
 
   }

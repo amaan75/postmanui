@@ -133,7 +133,7 @@ const SendRequest = (props) => {
 
   const classes = useStyles()
 
-  const [request, setRequest] = useState(null)
+  const [request, setRequest] = useState(selectedRequest)
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -157,19 +157,23 @@ const SendRequest = (props) => {
     }
   }, [selectedRequest])
 
-  useEffect(() => {
-    const errors = validate(formState.values, schema);
+  // useEffect(() => {
+  //   const errors = validate(formState.values, schema);
 
-    setFormState(formState => ({
-      ...formState,
-      isValid: errors ? false : true,
-      errors: errors || {}
-    }));
-  }, [formState.values])
+  //   setFormState(formState => ({
+  //     ...formState,
+  //     isValid: errors ? false : true,
+  //     errors: errors || {}
+  //   }));
+  // }, [formState.values])
 
   const handleChange = event => {
     event.persist()
 
+    setRequest(prevRequest => ({
+      ...prevRequest,
+      url: event.target.value
+    }))
     setFormState(formState => ({
       ...formState,
       values: {
@@ -199,8 +203,9 @@ const SendRequest = (props) => {
       const response = Axios[selectedRequest.method.toLowerCase()](selectedRequest.url);
       response.then(response => { console.log(response); }).catch(err => console.err(err));
     } else {
-      const requestEntity = createRequest(selectedRequest);
-      const response = Axios.post("http://localhost:8080/make/request", requestEntity);
+      const requestEntity = createRequest(request);
+      console.log(`requestEntity :${JSON.stringify(requestEntity, null, 2)}`)
+      const response = Axios.post("http://localhost:3001/requests/make/request", requestEntity);
       response.then(response => { setResponse(response.data) }).catch(err => console.log(err))
     }
   }

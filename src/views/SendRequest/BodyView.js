@@ -87,8 +87,8 @@ const Element = (props) => {
     const hasError = field =>
         touched[field] && errors[field] ? true : false
     const allowJsonModification = isDisabled ? false : handleEditOrAddOrDelete;
-    console.log("errors", errors)
-    console.log("touched", touched)
+    // console.log("errors", errors)
+    // console.log("touched", touched)
     return (
         <Container disableGutters={true} className={classes.root}>
             <Grid

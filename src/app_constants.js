@@ -17,6 +17,10 @@ export const INITIAL_STATE = {
                         key1: "value1",
                         key2: "value2",
                         key3: "value3"
+                    },
+                    headers: {
+                        "content-type": ["application/json"],
+                        "test": ["test1"]
                     }
                 },
                 {

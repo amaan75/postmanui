@@ -84,9 +84,11 @@ const Element = (props) => {
         }
     }
 
+
+
     const hasError = field =>
         touched[field] && errors[field] ? true : false
-    const allowJsonModification = isDisabled ? false : handleEditOrAddOrDelete;
+    const allowJsonModification = isDisabled ? false : props.jsonBodyHandler;
     // console.log("errors", errors)
     // console.log("touched", touched)
     return (
@@ -139,7 +141,8 @@ const BodyView = withStateManagementFunctions(Element);
 
 BodyView.propTypes = {
     src: PropTypes.object.isRequired,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    jsonBodyHandler: PropTypes.func.isRequired
 }
 
 export {

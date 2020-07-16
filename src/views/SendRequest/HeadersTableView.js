@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
+import _ from "underscore";
 import { reduceHeaders } from 'helpers';
 
 const useStyles = makeStyles(theme => ({
@@ -30,6 +31,25 @@ const HeadersTableView = (props) => {
     const classes = useStyles();
     const { headers } = props;
 
+    const createHeaderCells = headerMultiValueMap => {
+        const result = [];
+        for (const headerKey in headerMultiValueMap) {
+            if (headerMultiValueMap.hasOwnProperty(headerKey)) {
+                const headerValues = headerMultiValueMap[headerKey];
+                result.push(<TableRow key={headerKey}>
+                    <TableCell className={classes.textField}
+                        size="small"
+                        component="h2"
+                        scope="row">
+                        {headerKey}
+                    </TableCell>
+                    <TableCell >{createHeaderValue(headerValues)}</TableCell>
+                </TableRow>);
+            }
+        }
+        return result;
+    }
+
     return (
         <TableContainer className={classes.root} variant="outlined" elevation={0} component={Paper}>
             <Table size="small" aria-label="a dense table">
@@ -40,17 +60,7 @@ const HeadersTableView = (props) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {headers.map((header) => (
-                        <TableRow key={header.key}>
-                            <TableCell className={classes.textField}
-                                size="small"
-                                component="h2"
-                                scope="row">
-                                {header.key}
-                            </TableCell>
-                            <TableCell >{createHeaderValue(header.values)}</TableCell>
-                        </TableRow>
-                    ))}
+                    {createHeaderCells(headers)}
                 </TableBody>
             </Table>
         </TableContainer>
@@ -59,15 +69,15 @@ const HeadersTableView = (props) => {
 }
 
 const createHeaderValue = (values) => {
-    const x = values.reduce(reduceHeaders);
-    console.log("reduces value", x);
-    return x;
+    if (!_.isArray(values)) values = [values]
+    const result = values.reduce(reduceHeaders);
+    return result;
 
 }
 
 
 HeadersTableView.propTypes = {
-    headers: PropTypes.array.isRequired,
+    headers: PropTypes.object.isRequired,
 }
 
 export {

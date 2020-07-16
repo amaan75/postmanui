@@ -9,6 +9,7 @@ import {
 import { history } from "../../history"
 import Axios from 'axios'
 import { ApiView } from './ApiView'
+import { unReduceHeaders } from 'helpers'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -133,7 +134,7 @@ const SendRequest = (props) => {
 
   const classes = useStyles()
 
-  const [request, setRequest] = useState(selectedRequest)
+  const [request, setRequest] = useState(selectedRequest || {})
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -190,6 +191,21 @@ const SendRequest = (props) => {
     }))
   }
 
+  const onHeaderChange = event => {
+    console.log(event.target.value)
+    console.log(event.target.name)
+    const name = event.target.name;
+    console.log(`${JSON.stringify(request, null, 2)}`)
+    event.persist();
+    setRequest(prevRequest => ({
+      ...prevRequest,
+      headers: {
+        ...prevRequest.headers,
+        [name]: unReduceHeaders(event.target.value)
+      }
+    }));
+  }
+
 
 
   const handleBack = () => {
@@ -206,8 +222,18 @@ const SendRequest = (props) => {
       const requestEntity = createRequest(request);
       console.log(`requestEntity :${JSON.stringify(requestEntity, null, 2)}`)
       const response = Axios.post("http://localhost:3001/requests/make/request", requestEntity);
-      response.then(response => { setResponse(response.data) }).catch(err => console.log(err))
+      response.then(response => {
+        console.log(response)
+        setResponse(response.data)
+      }).catch(err => console.log(err))
     }
+  }
+
+  const jsonBodyHandler = event => {
+    setRequest(prevRequest => ({
+      ...prevRequest,
+      body: event.updated_src
+    }));
   }
 
   const createRequest = (request) => {
@@ -215,19 +241,15 @@ const SendRequest = (props) => {
       url: request.url,
       method: request.method,
       body: request.body || {},
-      headers: [{
-        key: "content-type",
-        values: ["application/json"]
-      }]
+      headers: {
+        "content-type": ["application/json"]
+      }
     }
   }
-  const requestHeaders =
-    [{
-      key: "content-type",
-      values: ["application/json"]
-    }];
+
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false
+  const headers = request.headers || {};
   return (
     <div className={classes.root}>
       {request !== null ?
@@ -253,12 +275,31 @@ const SendRequest = (props) => {
             name="url"
             onChange={handleChange}
             type="text"
-            value={formState.values.url || ''}
+            value={request.url || ''}
             variant="outlined"
           />
 
+          <TextField
+            className={classes.textField}
+            error={hasError("token")}
+            fullWidth
+            helperText={
+              hasError('token') ? formState.errors.url[0] : null
+            }
+            label="Token"
+            name="authorization"
+            onChange={onHeaderChange}
+            type="text"
+            value={headers.authorization || ""}
+            variant="outlined"
+          />
 
-          <ApiView jsonBody={selectedRequest.body} bodyViewTitle="Request Body" headers={requestHeaders} />
+          <ApiView
+            // type="REQUEST"
+            jsonBody={request.body}
+            jsonBodyHandler={jsonBodyHandler}
+            bodyViewTitle="Request Body"
+            headers={request.headers} />
 
           <Button
             className={classes.sendReqeustButton}
@@ -271,7 +312,9 @@ const SendRequest = (props) => {
             Send Request
         </Button>
 
-          <ApiView isDisabled={false}
+          <ApiView
+            type="RESPONSE"
+            isDisabled={false}
             jsonBody={response.body}
             headers={response.headers}
             bodyViewTitle="Response Body" />

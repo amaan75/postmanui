@@ -1,2 +1,8 @@
 const reducer = (accumulator, currentValue) => `${accumulator},${currentValue}`;
-export { reducer }
+const unReduce = (headerValueString) => {
+    if (headerValueString !== undefined || headerValueString !== null) {
+        return headerValueString.split(',');
+    }
+    return [];
+}
+export { reducer, unReduce }

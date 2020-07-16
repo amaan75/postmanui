@@ -47,7 +47,7 @@ const ApiView = props => {
                 <StyledTab label="Headers" />
             </StyledTabs >
             <TabPanel value={selectedTab} index={0} render=
-                {() => <BodyView src={body} isDisabled={isDisabled} />} />
+                {() => <BodyView src={body} jsonBodyHandler={props.jsonBodyHandler} isDisabled={isDisabled} />} />
 
             <TabPanel value={selectedTab} index={1} render={
                 () => <HeadersTableView headers={headers} />} />
@@ -61,6 +61,7 @@ ApiView.propTypes = {
     jsonBody: PropTypes.object.isRequired,
     headers: PropTypes.array.isRequired,
     bodyViewTitle: PropTypes.string.isRequired,
+    jsonBodyHandler: PropTypes.func.isRequired
 };
 
 

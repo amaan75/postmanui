@@ -15,8 +15,8 @@ const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: 'theme.palette.background.default',
     height: '100%',
-    paddingLeft:0,
-    marginLeft:0
+    paddingLeft: 0,
+    marginLeft: 0
   },
   bodyContent: {
     height: '300px',
@@ -96,8 +96,8 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginTop: theme.spacing(2),
-    fontSize:30,
-    backgroundColor:"#dcedc8"
+    fontSize: 30,
+    backgroundColor: "#dcedc8"
   },
   policy: {
     marginTop: theme.spacing(1),
@@ -226,36 +226,39 @@ const SendRequest = (props) => {
     } else {
       const requestEntity = createRequest(request);
       console.log(`requestEntity :${JSON.stringify(requestEntity, null, 2)}`)
-      const response = Axios.post("http://localhost:3001/requests/make/request", requestEntity);
-      response.then(response => {
-        console.log(response)
-        setResponse(response.data)
-      }).catch(err => console.log(err))
-  }}
+      const response = makeRequest(requestEntity);
+      response.then(response => setResponse(response.data)).catch(err => console.log(err))
+    }
+  }
 
-  const getToken=event => {
-     const data= {"loginName": "Admin@isp.com","password": "Aa123456","captchaString": "123456"}
+  const makeRequest = requestEntity => Axios.post("http://localhost:3001/requests/make/request", requestEntity);
 
+
+  const getToken = event => {
     event.preventDefault()
-    const loginRes= Axios.post("http://jazan.qa.isp.elm.sa/identityservice/authentication/sign-in",data, {'Content-Type':'application/json' })
-
-    loginRes.then(resp => {setSecondResponse(resp)
-    }).catch(err => setSecondResponse(err))
-
-    console.log(secResponse)
+    const data = { "loginName": "Admin@isp.com", "password": "Aa123456", "captchaString": "123456" }
+    const loginResponse = makeRequest({
+      url: "http://jazan.qa.isp.elm.sa/identityservice/authentication/sign-in",
+      method: "post",
+      body: data,
+      headers: {
+        "content-type": ["application/json"]
+      }
+    });
+    loginResponse.then(response => {
+      console.log(response)
+    }).catch(err => console.log(err))
     //const strCookie = "Identity.TwoFactorUserId=" + secResponse.getCookie("Identity.TwoFactorUserId") + "; idsrv.session=" + secResponse.getCookie("idsrv.session") + "; .AspNetCore.Identity.Application=" + secResponse.getCookie(".AspNetCore.Identity.Application");
-
-    const queryData={
-      'client_id':'inspection_spa',
-      'response_type':'id_token token',
-      'redirect_uri':'http://jazan.qa.isp.elm.sa//#/identity-guards/auth-callback#',
-      'scope':'inspection_profile',
-      'state':'444',
-      'nonce':'444'
+    const queryData = {
+      'client_id': 'inspection_spa',
+      'response_type': 'id_token token',
+      'redirect_uri': 'http://jazan.qa.isp.elm.sa//#/identity-guards/auth-callback#',
+      'scope': 'inspection_profile',
+      'state': '444',
+      'nonce': '444'
 
     }
-  // const res= Axios.get("http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback",queryData,{'Cookie':strCookie})
-  //console.log(res)
+
   }
 
   const jsonBodyHandler = event => {
@@ -293,7 +296,7 @@ const SendRequest = (props) => {
           className={classes.form}
           onSubmit={handleSubmit}
         >
-        {/*  <Typography
+          {/*  <Typography
             className={classes.title}
             variant="h2"
           >

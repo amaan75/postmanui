@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   item: {
     display: 'flex',
     paddingTop: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
   },
   button: {
     color: colors.blueGrey[800],

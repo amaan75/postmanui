@@ -22,7 +22,8 @@ const StyledTabs = withStyles({
 const StyledTab = withStyles((theme) => ({
     root: {
         textTransform: 'none',
-        color: '#000',
+        color: 'black',
+      backgroundColor:'#29b6f6',
         fontWeight: theme.typography.fontWeightRegular,
         fontSize: theme.typography.pxToRem(15),
         marginRight: theme.spacing(1),

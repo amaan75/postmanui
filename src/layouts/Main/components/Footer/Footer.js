@@ -20,7 +20,7 @@ const Footer = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <Typography variant="body1">
+     {/* <Typography variant="body1">
         &copy;{' '}
         <Link
           component="a"
@@ -30,10 +30,10 @@ const Footer = props => {
           POSTGUY
         </Link>
         . 2020
-      </Typography>
-      <Typography variant="caption">
+      </Typography>*/}
+     {/* <Typography variant="caption">
         Centralized Request Sender.
-      </Typography>
+      </Typography>*/}
     </div>
   );
 };

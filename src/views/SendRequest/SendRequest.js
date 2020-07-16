@@ -13,8 +13,10 @@ import { unReduceHeaders } from 'helpers'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: theme.palette.background.default,
-    height: '100%'
+    backgroundColor: 'theme.palette.background.default',
+    height: '100%',
+    paddingLeft:0,
+    marginLeft:0
   },
   bodyContent: {
     height: '300px',
@@ -80,9 +82,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   form: {
-    paddingLeft: 100,
-    paddingRight: 100,
-    paddingBottom: 125,
+    paddingLeft: 10,
+    paddingRight: 20,
+    paddingBottom: 10,
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
@@ -93,7 +95,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   textField: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    fontSize:30,
+    backgroundColor:"#dcedc8"
   },
   policy: {
     marginTop: theme.spacing(1),
@@ -112,19 +116,19 @@ const schema = {
   url: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 32
+      maximum: 5000
     }
   },
   header: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 32
+      maximum: 5000
     }
   },
   body: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
-      maximum: 64
+      maximum: 50000
     }
   },
 }
@@ -144,6 +148,7 @@ const SendRequest = (props) => {
 
   const [response, setResponse] = useState({});
 
+  const [secResponse, setSecondResponse] = useState({});
   useEffect(() => {
     if (selectedRequest) {
       console.log(selectedRequest)
@@ -226,7 +231,31 @@ const SendRequest = (props) => {
         console.log(response)
         setResponse(response.data)
       }).catch(err => console.log(err))
+  }}
+
+  const getToken=event => {
+     const data= {"loginName": "Admin@isp.com","password": "Aa123456","captchaString": "123456"}
+
+    event.preventDefault()
+    const loginRes= Axios.post("http://jazan.qa.isp.elm.sa/identityservice/authentication/sign-in",data, {'Content-Type':'application/json' })
+
+    loginRes.then(resp => {setSecondResponse(resp)
+    }).catch(err => setSecondResponse(err))
+
+    console.log(secResponse)
+    //const strCookie = "Identity.TwoFactorUserId=" + secResponse.getCookie("Identity.TwoFactorUserId") + "; idsrv.session=" + secResponse.getCookie("idsrv.session") + "; .AspNetCore.Identity.Application=" + secResponse.getCookie(".AspNetCore.Identity.Application");
+
+    const queryData={
+      'client_id':'inspection_spa',
+      'response_type':'id_token token',
+      'redirect_uri':'http://jazan.qa.isp.elm.sa//#/identity-guards/auth-callback#',
+      'scope':'inspection_profile',
+      'state':'444',
+      'nonce':'444'
+
     }
+  // const res= Axios.get("http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback",queryData,{'Cookie':strCookie})
+  //console.log(res)
   }
 
   const jsonBodyHandler = event => {
@@ -264,12 +293,12 @@ const SendRequest = (props) => {
           className={classes.form}
           onSubmit={handleSubmit}
         >
-          <Typography
+        {/*  <Typography
             className={classes.title}
             variant="h2"
           >
             Send your request
-        </Typography>
+        </Typography>*/}
           <TextField
             // disabled={true}
             className={classes.textField}
@@ -300,7 +329,27 @@ const SendRequest = (props) => {
             value={headers.authorization || ""}
             variant="outlined"
           />
-
+          <Button
+            className={classes.sendReqeustButton}
+            color="secondary"
+            //fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+          >
+            Send Request
+          </Button>
+          <Button
+            className={classes.sendReqeustButton}
+            color="secondary"
+            //fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            onClick={getToken}
+          >
+            Get Token
+          </Button>
           <ApiView
             // type="REQUEST"
             jsonBody={request.body}
@@ -308,21 +357,10 @@ const SendRequest = (props) => {
             bodyViewTitle="Request Body"
             headers={request.headers} />
 
-          <Button
-            className={classes.sendReqeustButton}
-            color="primary"
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-          >
-            Send Request
-        </Button>
-
           <ApiView
             type="RESPONSE"
             isDisabled={false}
-            jsonBody={response.body}
+            jsonBody={response}
             headers={response.headers}
             bodyViewTitle="Response Body" />
         </form>

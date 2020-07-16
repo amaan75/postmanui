@@ -15,7 +15,8 @@ const useStyles = makeStyles(theme => ({
         minHeight: "200px"
     },
     grid: {
-        padding: "0 12px"
+        padding: "0 12px",
+      fontSize:28
     },
     debug: {
         backgroundColor: "yellow",
@@ -97,7 +98,7 @@ const Element = (props) => {
                 className={classes.grid}
                 container={true}
                 bgcolor="yellow"
-                color="white"
+                color="black"
                 direction="row"
                 justify="space-between"
                 alignItems="center"

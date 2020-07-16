@@ -27,9 +27,9 @@ const Profile = props => {
   const classes = useStyles();
 
   const user = {
-    name: 'Shen Zhi',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: 'Brain Director'
+    name: 'Alok Rai',
+    avatar: '/images/avatars/inspectionlogo.png',
+    bio: 'Inspection QA'
   };
 
   return (
@@ -46,7 +46,7 @@ const Profile = props => {
       />
       <Typography
         className={classes.name}
-        variant="h4"
+        variant="h3"
       >
         {user.name}
       </Typography>

@@ -237,14 +237,21 @@ const SendRequest = (props) => {
   }
 
   const createRequest = (request) => {
+    const headers = request.headers || {};
+    const headersToSend = formatHeaders(headers)
     return {
       url: request.url,
       method: request.method,
       body: request.body || {},
-      headers: {
-        "content-type": ["application/json"]
-      }
+      headers: headersToSend
     }
+  }
+  const formatHeaders = headers => {
+    const result = {
+      ...headers,
+      authorization: `Bearer ${headers.authorization}`
+    };
+    return result;
   }
 
   const hasError = field =>

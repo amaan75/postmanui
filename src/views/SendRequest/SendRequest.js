@@ -249,7 +249,7 @@ const SendRequest = (props) => {
   const formatHeaders = headers => {
     const result = {
       ...headers,
-      authorization: `Bearer ${headers.authorization}`
+      authorization: unReduceHeaders(`Bearer ${headers.authorization}`)
     };
     return result;
   }

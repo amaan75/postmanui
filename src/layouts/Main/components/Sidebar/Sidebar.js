@@ -37,10 +37,6 @@ const Sidebar = props => {
   const classes = useStyles();
 
 
-
-
-
-
   return (
     <Drawer
       anchor="left"

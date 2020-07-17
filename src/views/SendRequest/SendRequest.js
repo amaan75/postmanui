@@ -222,6 +222,8 @@ const SendRequest = (props) => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    setResponse({ 'Response':'No Response yet '})
+    getToken()
     if (isLocal) {
       //todo:
       const response = Axios[selectedRequest.method.toLowerCase()](selectedRequest.url);
@@ -230,18 +232,18 @@ const SendRequest = (props) => {
       const requestEntity = createRequest(request);
       console.log(`requestEntity :${JSON.stringify(requestEntity, null, 2)}`)
       const response = makeRequest(requestEntity);
-      response.then(response => setResponse(response.data)).catch(err => console.log(err))
+      response.then(response => setResponse(response.data.body)).catch(err => setResponse(err.toJSON()))
     }
   }
 
   const makeRequest = requestEntity => Axios.post("http://localhost:3001/requests/make/request", requestEntity);
 
 
-  const getToken = event => {
-    event.preventDefault()
-    const data = { "loginName": "Admin@isp.com", "password": "Aa123456", "captchaString": "123456" }
+  const getToken = () => {
+    //event.preventDefault()
+    const data = { "loginName": "Inspector@elm.sa", "password": "Aa123456", "captchaString": "123456" }
     const loginResponse = makeRequest({
-      url: "http://jazan.qa.isp.elm.sa/identityservice/authentication/sign-in",
+      url: "http://alok.qa.isp.elm.sa/identityservice/authentication/sign-in",
       method: "post",
       body: data,
       headers: {
@@ -257,11 +259,11 @@ const SendRequest = (props) => {
 
       console.log(cookie)
       const realLoginRequest = {
-        url: "http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback",
+        url: "http://alok.qa.isp.elm.sa/identityservice/connect/authorize/callback",
         params: {
           'client_id': 'inspection_spa',
           'response_type': 'id_token token',
-          'redirect_uri': 'http://jazan.qa.isp.elm.sa/#/identity-guards/auth-callback#',
+          'redirect_uri': 'http://alok.qa.isp.elm.sa/#/identity-guards/auth-callback#',
           'scope': 'openid profile inspection_profile',
           'state': '444',
           'nonce': '444'
@@ -276,8 +278,10 @@ const SendRequest = (props) => {
 
       };
       makeRequest(realLoginRequest).then(res => {
-        const token = extractToken(res.headers.location)
-        console.log(`token :${token}`)
+        console.log(res)
+       // console.log(res.headers.location);
+        const token = extractToken(res.data.headers.location[0].split('id_token=')[1])
+        console.log(`token : ${token}`)
         setRequest(prevRequest => ({
           ...prevRequest,
           headers: {
@@ -292,17 +296,13 @@ const SendRequest = (props) => {
 
     const extractToken = tokenHeaderValue => {
       if (tokenHeaderValue !== undefined || tokenHeaderValue !== null) {
-        return tokenHeaderValue.split("access_token")[1].split("&token_type")[0];
+        const token = tokenHeaderValue.split("access_token=")[1].split("&token_type")[0];
+         console.log(token);
+         return token;
+
       }
       return "";
     }
-
-    //const strCookie= loginResp
-
-    //console.log("cookie"+loginResp)
-
-    // const strCookie = "Identity.TwoFactorUserId=" + secResponse.getCookie("Identity.TwoFactorUserId") + "; idsrv.session=" + secResponse.getCookie("idsrv.session") + "; .AspNetCore.Identity.Application=" + secResponse.getCookie(".AspNetCore.Identity.Application");
-
 
   }
 
@@ -376,6 +376,7 @@ const SendRequest = (props) => {
             type="text"
             value={headers.authorization || ""}
             variant="outlined"
+
           />
           <Button
             className={classes.sendReqeustButton}
@@ -387,7 +388,7 @@ const SendRequest = (props) => {
           >
             Send Request
           </Button>
-          <Button
+          {/*<Button
             className={classes.sendReqeustButton}
             color="secondary"
             //fullWidth
@@ -397,7 +398,7 @@ const SendRequest = (props) => {
             onClick={getToken}
           >
             Get Token
-          </Button>
+          </Button>*/}
           <ApiView
             // type="REQUEST"
             jsonBody={request.body}

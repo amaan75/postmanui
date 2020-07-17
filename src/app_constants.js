@@ -59,16 +59,16 @@ export const INITIAL_STATE = {
           id: 'CA',
           method: "GET",
           name: "Get Survey Task",
-          url: "http://localhost:4000/books/addBook",
+          url: "https://alok.qa.isp.elm.sa/surveyorservice/api/surveyor-task/ae130ce3-6f67-11ea-aa3e-005056b22a37",
           token: "9U320H230FH23F23F08H",
           type: "GET",
           description: "Add a book in the database"
         },
         {
           id: 'CB',
-          method: "GET",
+          method: "POST",
           name: "Submit Survey Task",
-          url: "http://localhost:4000/books/selectAll",
+          url: "https://alok.qa.isp.elm.sa/surveyorservice/api/surveyor-task/submit-surveyor-task",
           token: "9U320H230FH23F23F08H",
           type: "POST",
           description: "select all the books from the database"

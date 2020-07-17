@@ -256,7 +256,7 @@ const SendRequest = (props) => {
         + ";.AspNetCore.Identity.Application=" + response.data.headers['set-cookie'][2].split('.Application=')[1].split(';')[0]
 
       console.log(cookie)
-      const realLoginRequest={
+      const realLoginRequest = {
         url: "http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback",
         params: {
           'client_id': 'inspection_spa',
@@ -270,26 +270,29 @@ const SendRequest = (props) => {
           "Cookie": [cookie]
         },
         method: "get",
+        validateStatus: function (status) {
+          return status >= 200 && status < 400;
+        }
 
       };
-      makeRequest(realLoginRequest).then(res =>{
-      const token=  extractToken(res.headers.location)
+      makeRequest(realLoginRequest).then(res => {
+        const token = extractToken(res.headers.location)
         console.log(`token :${token}`)
-        setRequest(prevRequest =>({
+        setRequest(prevRequest => ({
           ...prevRequest,
-          headers:{
+          headers: {
             ...prevRequest.headers,
             authorization: token
           }
         }))
-      } ).catch(err => console.log(err));
+      }).catch(err => console.log(err));
 
     }).catch(err => console.log(err))
 
 
-    const extractToken = tokenHeaderValue =>{
-      if(tokenHeaderValue!==undefined || tokenHeaderValue!==null){
-       return tokenHeaderValue.split("access_token")[1].split("&token_type")[0];
+    const extractToken = tokenHeaderValue => {
+      if (tokenHeaderValue !== undefined || tokenHeaderValue !== null) {
+        return tokenHeaderValue.split("access_token")[1].split("&token_type")[0];
       }
       return "";
     }

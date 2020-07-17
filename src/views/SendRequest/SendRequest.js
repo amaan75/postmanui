@@ -267,16 +267,32 @@ const SendRequest = (props) => {
           'nonce': '444'
         },
         headers: {
-          "Cookie": cookie
+          "Cookie": [cookie]
         },
         method: "get",
 
       };
-      makeRequest(realLoginRequest).then(res => console.log(res)).catch(err => console.log(err));
-      Axios.request( realLoginRequest)
-        .catch(err=>console.log(err));
+      makeRequest(realLoginRequest).then(res =>{
+      const token=  extractToken(res.headers.location)
+        console.log(`token :${token}`)
+        setRequest(prevRequest =>({
+          ...prevRequest,
+          headers:{
+            ...prevRequest.headers,
+            authorization: token
+          }
+        }))
+      } ).catch(err => console.log(err));
+
     }).catch(err => console.log(err))
 
+
+    const extractToken = tokenHeaderValue =>{
+      if(tokenHeaderValue!==undefined || tokenHeaderValue!==null){
+       return tokenHeaderValue.split("access_token")[1].split("&token_type")[0];
+      }
+      return "";
+    }
 
     //const strCookie= loginResp
 

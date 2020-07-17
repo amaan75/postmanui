@@ -244,52 +244,40 @@ const SendRequest = (props) => {
       method: "post",
       body: data,
       headers: {
-        "content-type": ["application/json"]
       }
     });
 
     loginResponse.then(response => {
       console.log("extracting")
       console.log(response)
-      const cookie= "Identity.TwoFactorUserId="+response.data.headers['set-cookie'][0].split('TwoFactorUserId=')[1].split(';')[0]
-      +";idsrv.session="+response.data.headers['set-cookie'][1].split('session=')[1].split(';')[0]
-      +";.AspNetCore.Identity.Application="+response.data.headers['set-cookie'][2].split('.Application=')[1].split(';')[0]
+      const cookie = "Identity.TwoFactorUserId=" + response.data.headers['set-cookie'][0].split('TwoFactorUserId=')[1].split(';')[0]
+        + ";idsrv.session=" + response.data.headers['set-cookie'][1].split('session=')[1].split(';')[0]
+        + ";.AspNetCore.Identity.Application=" + response.data.headers['set-cookie'][2].split('.Application=')[1].split(';')[0]
 
       console.log(cookie)
-      /*params : {
-        'client_id': 'inspection_spa',
-        'response_type': 'id_token token',
-        'redirect_uri': 'http://jazan.qa.isp.elm.sa//#/identity-guards/auth-callback#',
-        'scope': 'inspection_profile',
-        'state': '444',
-        'nonce': '444'
-
-      }*/
-
-
-
-      Axios.get("http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback", { params : {
+      const realLoginRequest = makeRequest({
+        url: "http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback",
+        params: {
           'client_id': 'inspection_spa',
           'response_type': 'id_token token',
           'redirect_uri': 'http://jazan.qa.isp.elm.sa/#/identity-guards/auth-callback#',
           'scope': 'openid profile inspection_profile',
           'state': '444',
           'nonce': '444'
+        },
+        headers: {
+          "Cookie": [cookie]
+        },
+        method: "get",
 
-        } } ,{"Cookie": cookie})
-        .then(res=>{
-          const token= res.headers
-          console.log(res)
-        }).catch(err=> console.log(err))
-      //setLoginResponse(response)
-
+      }).then(res => console.log(res)).catch(err => console.log(err));
     }).catch(err => console.log(err))
 
     //const strCookie= loginResp
 
     //console.log("cookie"+loginResp)
 
-   // const strCookie = "Identity.TwoFactorUserId=" + secResponse.getCookie("Identity.TwoFactorUserId") + "; idsrv.session=" + secResponse.getCookie("idsrv.session") + "; .AspNetCore.Identity.Application=" + secResponse.getCookie(".AspNetCore.Identity.Application");
+    // const strCookie = "Identity.TwoFactorUserId=" + secResponse.getCookie("Identity.TwoFactorUserId") + "; idsrv.session=" + secResponse.getCookie("idsrv.session") + "; .AspNetCore.Identity.Application=" + secResponse.getCookie(".AspNetCore.Identity.Application");
 
 
   }

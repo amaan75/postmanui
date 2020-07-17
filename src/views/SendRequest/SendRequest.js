@@ -10,6 +10,7 @@ import { history } from "../../history"
 import Axios from 'axios'
 import { ApiView } from './ApiView'
 import { unReduceHeaders } from 'helpers'
+import { createLocation } from 'history';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -255,7 +256,7 @@ const SendRequest = (props) => {
         + ";.AspNetCore.Identity.Application=" + response.data.headers['set-cookie'][2].split('.Application=')[1].split(';')[0]
 
       console.log(cookie)
-      const realLoginRequest = makeRequest({
+      const realLoginRequest={
         url: "http://jazan.qa.isp.elm.sa/identityservice/connect/authorize/callback",
         params: {
           'client_id': 'inspection_spa',
@@ -266,12 +267,16 @@ const SendRequest = (props) => {
           'nonce': '444'
         },
         headers: {
-          "Cookie": [cookie]
+          "Cookie": cookie
         },
         method: "get",
 
-      }).then(res => console.log(res)).catch(err => console.log(err));
+      };
+      makeRequest(realLoginRequest).then(res => console.log(res)).catch(err => console.log(err));
+      Axios.request( realLoginRequest)
+        .catch(err=>console.log(err));
     }).catch(err => console.log(err))
+
 
     //const strCookie= loginResp
 

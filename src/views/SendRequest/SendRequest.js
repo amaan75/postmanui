@@ -17,7 +17,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'theme.palette.background.default',
     height: '100%',
     paddingLeft: 0,
-    marginLeft: 0
+    marginLeft: 0,
+    paddingTop:0
   },
   bodyContent: {
     height: '300px',
@@ -98,7 +99,9 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginTop: theme.spacing(2),
     fontSize: 30,
-    backgroundColor: "#dcedc8"
+    backgroundColor: "#dcedc8",
+
+
   },
   policy: {
     marginTop: theme.spacing(1),
@@ -334,6 +337,7 @@ const SendRequest = (props) => {
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false
   const headers = request.headers || {};
+
   return (
     <div className={classes.root}>
       {request !== null ?
@@ -363,7 +367,7 @@ const SendRequest = (props) => {
             variant="outlined"
           />
 
-          <TextField
+          {/*<TextField
             className={classes.textField}
             error={hasError("token")}
             fullWidth
@@ -377,7 +381,7 @@ const SendRequest = (props) => {
             value={headers.authorization || ""}
             variant="outlined"
 
-          />
+          />*/}
           <Button
             className={classes.sendReqeustButton}
             color="secondary"

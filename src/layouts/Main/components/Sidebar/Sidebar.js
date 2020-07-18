@@ -10,14 +10,14 @@ import { Profile, SidebarNav, UpgradePlan } from './components';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
-    width: 350,
+    width: 290,
     [theme.breakpoints.up('lg')]: {
       marginTop: 64,
       height: 'calc(100% - 64px)'
     }
   },
   root: {
-    backgroundColor: theme.palette.white,
+    backgroundColor: '#4791db',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
@@ -49,7 +49,7 @@ const Sidebar = props => {
         {...rest}
         className={clsx(classes.root, className)}
       >
-        <Profile />
+       {/* <Profile />*/}
         <Divider
           className={classes.divider}
         />

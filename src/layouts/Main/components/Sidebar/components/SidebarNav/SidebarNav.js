@@ -54,6 +54,10 @@ const useStyles = makeStyles(theme => ({
   },
   reqButton: {
 
+    fontSize:10,
+    fontFamily:'sans-serif', // No effect
+    fontWeight:40 // no effect
+
   }
 }))
 
@@ -94,6 +98,7 @@ const SidebarNav = props => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
+
         >
           <Typography className={classes.heading}>{requestGroup.name}</Typography>
         </ExpansionPanelSummary>
@@ -113,7 +118,7 @@ const SidebarNav = props => {
                   onClick={onRequestChange}
                   name={request.id}
                 >
-                  {request.method.toUpperCase() + " | " + request.name}
+                  {request.method + " => " + request.name.toLowerCase()}
                 </Button>
               )}
           </ButtonGroup>

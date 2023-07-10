@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <script>
+        function submitForm(event) {
+            event.preventDefault()
+            const form = event.target;
+            const url = form['action'];
+            console.log("url" + url)
+            const newUrl = `${url}&abc=123`;
+            console.log("newUrl" + newUrl)
+            // form.submit()
+
+        }
+    </script>
+</head>
+
+<body>
+    I would suggest creating an invisible form in your HTML like this:
+    <form id="invisible_form" onsubmit="submitForm"
+        action="https://tekondev.service-now.com/login.do?user_name=xxxx&user_password=xxxxx&sys_action=sysverb_login&token=aman_special"
+        method="post" target="_blank">
+        <input id="new_window_parameter_1" name="parameter" type="hidden" value="default">
+        <button type="submit">OK</button>
+    </form>
+</body>
+
+</html>
